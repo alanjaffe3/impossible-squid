@@ -79,7 +79,7 @@ for i, file in enumerate(bucket.objects.filter(Prefix='s9000/')):
         folder_month = f"s9000/{year}/{month}/"
         folder_day = f"s9000/{year}/{month}/{day}/"
 
-        # create "folders" if needed
+        # create folders if they don't exist
         if not exists(folder_year):
             s3_client.put_object(Bucket=BUCKET_NAME, Key=folder_year)
 
@@ -93,7 +93,12 @@ for i, file in enumerate(bucket.objects.filter(Prefix='s9000/')):
 
         new_key = f"{folder_day}{relative_key}"
 
-        s3_client.put_object(Bucket=BUCKET_NAME, Key=new_key, Body='')
+        s3.Object(BUCKET_NAME, new_key).copy_from(
+            CopySource={'Bucket': BUCKET_NAME, 'Key': file.key}
+        )
+
+        s3.Object(BUCKET_NAME, file.key).delete()
+
 
 
 

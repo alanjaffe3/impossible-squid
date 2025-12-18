@@ -2,6 +2,7 @@ import boto3
 from datetime import datetime
 import random
 import re
+from botocore.exceptions import ClientError
 
 BUCKET_NAME = "trellisense-raw-sudoe"
 
@@ -34,10 +35,6 @@ file_p2 = [''] * 10
 # )
 #s3_key = []
 #date_str = []
-
-import re
-from datetime import datetime
-from botocore.exceptions import ClientError
 
 bucket = s3.Bucket(BUCKET_NAME)
 

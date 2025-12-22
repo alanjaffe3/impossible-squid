@@ -6,11 +6,13 @@ from botocore.exceptions import ClientError
 
 ## === setup items === ##
 BUCKET_NAME = "trellisense-raw-sudoe"
+FOLDER_NAME = "s9000/"
 
 s3 = boto3.resource('s3')
 s3_client = boto3.client('s3')
-## === === ##
+## =================== ##
 
+## === test data generation === ##
 #arbitrary start and end dates
 start_date = datetime(2024, 6, 1)
 end_date = datetime(2025, 6, 1)
@@ -38,6 +40,9 @@ file_p2 = [''] * 10
 # s3_key = []
 # date_str = []
 
+## =========================== ##
+
+
 ## === core code === ##
 bucket = s3.Bucket(BUCKET_NAME)
 
@@ -51,7 +56,7 @@ def exists(key):
         else:
             raise
 
-for i, file in enumerate(bucket.objects.filter(Prefix='s9000/')):
+for i, file in enumerate(bucket.objects.filter(Prefix=FOLDER_NAME)):
     
     if re.search(r'^s\d+/', file.key):
         file_rem = re.sub(r'^s\d+/', '', file.key)
@@ -75,9 +80,9 @@ for i, file in enumerate(bucket.objects.filter(Prefix='s9000/')):
         month = dt.strftime("%m")
         day   = dt.strftime("%d")
 
-        folder_year = f"s9000/{year}/"
-        folder_month = f"s9000/{year}/{month}/"
-        folder_day = f"s9000/{year}/{month}/{day}/"
+        folder_year = f"{FOLDER_NAME}{year}/"
+        folder_month = f"{FOLDER_NAME}{year}/{month}/"
+        folder_day = f"{FOLDER_NAME}{year}/{month}/{day}/"
 
         # create folders if they don't exist
         if not exists(folder_year):
@@ -89,7 +94,7 @@ for i, file in enumerate(bucket.objects.filter(Prefix='s9000/')):
         if not exists(folder_day):
             s3_client.put_object(Bucket=BUCKET_NAME, Key=folder_day)
 
-        relative_key = file.key[len("s9000/"):]
+        relative_key = file.key[len(FOLDER_NAME):]
 
         new_key = f"{folder_day}{relative_key}"
 
@@ -98,4 +103,4 @@ for i, file in enumerate(bucket.objects.filter(Prefix='s9000/')):
         )
 
         s3.Object(BUCKET_NAME, file.key).delete()
-## === === ##
+## ================== ##

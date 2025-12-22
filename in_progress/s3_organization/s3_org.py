@@ -4,10 +4,12 @@ import random
 import re
 from botocore.exceptions import ClientError
 
+## === setup items === ##
 BUCKET_NAME = "trellisense-raw-sudoe"
 
 s3 = boto3.resource('s3')
 s3_client = boto3.client('s3')
+## === === ##
 
 #arbitrary start and end dates
 start_date = datetime(2024, 6, 1)
@@ -28,14 +30,15 @@ file_p2 = [''] * 10
 #     file_p1[i] = 'AVG_Path-1_' + date_array[i] + '.txt'
 #     file_p2[i] = 'AVG_Path-2_' + date_array[i] + '.txt'
 
-    # response = s3.put_object(
-    # Bucket=BUCKET_NAME,
-    # Key = 's9000/'+ file_norm[i],
-    # Body = ''
+#     response = s3_client.put_object(
+#     Bucket=BUCKET_NAME,
+#     Key = 's9000/'+ file_norm[i],
+#     Body = 'hi hello hi'
 # )
-#s3_key = []
-#date_str = []
+# s3_key = []
+# date_str = []
 
+## === core code === ##
 bucket = s3.Bucket(BUCKET_NAME)
 
 def exists(key):
@@ -95,8 +98,4 @@ for i, file in enumerate(bucket.objects.filter(Prefix='s9000/')):
         )
 
         s3.Object(BUCKET_NAME, file.key).delete()
-
-
-
-
-
+## === === ##

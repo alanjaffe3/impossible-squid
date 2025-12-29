@@ -6,18 +6,16 @@ from move import *
 # --------------------
 # Configuration
 # --------------------
-sigSearchSize = 40000     # motor steps from center in each direction
-sigSearchSteps = 200      # motor steps per move
-
+sigSearchSize = 40000  # motor steps from center in each direction
+sigSearchSteps = 200  # motor steps per move
 
 ipTarget = "ws://192.168.1.83:6340"
 searchDelay = 0.1
 
-MAX_READS = 400   # keep last 100 signal reads
+MAX_READS = 400  # keep last 100 signal reads
 
 sigSearchArray = np.zeros((MAX_READS, 2))
 sigIndex = 0
-
 
 channel = 1
 samples = 3
@@ -40,6 +38,7 @@ ws = websocket.WebSocket()
 ws.connect(ipTarget)
 print(ws.recv())
 
+
 # --------------------
 # Data grab function
 # --------------------
@@ -56,6 +55,7 @@ def dataGrab():
         sleep(searchDelay)
 
     return totalSum / float(samples)
+
 
 # --------------------
 # Signal search routine
@@ -81,7 +81,7 @@ def sigSearch():
                 sigMaxX = i
                 sigMaxY = j
 
-            #sigSearchArray[x][y] = sigValue
+            # sigSearchArray[x][y] = sigValue
             sigSearchArray[sigIndex % MAX_READS, 0] = sigValue
             sigSearchArray[sigIndex % MAX_READS, 1] = sigMax
             sigIndex += 1
@@ -105,7 +105,7 @@ def sigSearch():
                 sigMaxX = i
                 sigMaxY = j
 
-            #sigSearchArray[x][y] = sigValue
+            # sigSearchArray[x][y] = sigValue
             sigSearchArray[sigIndex % MAX_READS, 0] = sigValue
             sigSearchArray[sigIndex % MAX_READS, 1] = sigMax
             sigIndex += 1
@@ -133,10 +133,11 @@ def sigSearch():
 
     print("...done moving back to approximate center")
 
+
 # --------------------
 # Run sequence
 # --------------------
-#mover((sigSearchSteps*sigSearchSize)/10, (sigSearchSteps*sigSearchSize)/10, False)
+# mover((sigSearchSteps*sigSearchSize)/10, (sigSearchSteps*sigSearchSize)/10, False)
 
-#moveToUpperLeftCorner()
+# moveToUpperLeftCorner()
 sigSearch()
